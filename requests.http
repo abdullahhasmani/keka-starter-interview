@@ -1,0 +1,44 @@
+### Health
+GET http://localhost:8000/health
+
+### Create account (happy path)
+POST http://localhost:8000/api/accounts
+Content-Type: application/json
+
+{"owner_name": "Abd", "initial_balance": 500}
+
+### Bad input -> 400
+POST http://localhost:8000/api/accounts
+Content-Type: application/json
+
+{"owner_name": "", "initial_balance": -10}
+
+### Get by id (paste an id from the create response)
+GET http://localhost:8000/api/accounts/REPLACE_ME
+
+### List all accounts
+GET http://localhost:8000/api/accounts
+
+### Deposit (happy path) -> 200
+POST http://localhost:8000/api/accounts/REPLACE_ME/deposit
+Content-Type: application/json
+
+{"amount": 100}
+
+### Deposit negative -> 400
+POST http://localhost:8000/api/accounts/REPLACE_ME/deposit
+Content-Type: application/json
+
+{"amount": -5}
+
+### Deposit wrong type -> 400
+POST http://localhost:8000/api/accounts/REPLACE_ME/deposit
+Content-Type: application/json
+
+{"amount": "abc"}
+
+### Deposit to missing account -> 404
+POST http://localhost:8000/api/accounts/does-not-exist/deposit
+Content-Type: application/json
+
+{"amount": 100}
