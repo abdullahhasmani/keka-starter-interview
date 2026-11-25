@@ -3,6 +3,7 @@
 Pydantic gives validation for free: wrong types, missing fields and failed
 constraints come back as 422 before your code runs.
 """
+import string
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -24,29 +25,37 @@ class CreateAccountRequest(BaseModel):
         return v
 
 
-class DepositRequest(BaseModel):
-    amount: Decimal = Field(gt=0, decimal_places=2)
+class VehicleEntryRequest(BaseModel):
+    vehicleNumber : str
+    vehicleType : str
+
+class VehicleExitRequest(BaseModel):
+    ticketId:str
+    minutesParked :Decimal
 
 
-class AccountResponse(BaseModel):
-    id: str
-    owner_name: str
-    balance: Decimal
-    created_at: datetime
+class TicketResponse(BaseModel):
+    ticketId : str
+    slot : str
+    vehicleType: str
+    status: str
 
+class FeesResponse(BaseModel):
+    ticketID: str
+    minutes : Decimal
 
-# ---------- Domain model: what we store ----------
-@dataclass
-class Account:
-    id: str
-    owner_name: str
-    balance: Decimal
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-
-    def to_response(self) -> AccountResponse:
-        return AccountResponse(
-            id=self.id,
-            owner_name=self.owner_name,
-            balance=self.balance,
-            created_at=self.created_at,
+class Ticket:
+    ticketId: str
+    slot: str
+    vehicleType: str
+    status: str
+    created_at: datetime= field(default_factory=datetime.now)
+    def to_response(self) -> TicketResponse:
+        return TicketResponse(
+            ticketId=self.ticketId,
+            slot=self.slot,
+            vehicleType=self.vehicleType,
+            status=self.status,
         )
+
+
